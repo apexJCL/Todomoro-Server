@@ -28,20 +28,26 @@ class User extends Model
     public $password;
     public $email;
 
+    public function rules()
+    {
+        return [
+            [['username', 'first_name', 'last_name', 'password', 'email'], 'required'],
+            [['username', 'first_name', 'last_name', 'password', 'email'], 'string'],
+        ];
+    }
+
+
     public function formName()
     {
         return "user";
     }
 
-
-    /**
-     * Receives a JSON Object
-     *
-     * @param $jsonObject
-     */
-    public function signUp($jsonObject)
+    public function authKeys()
     {
-
+        return [
+            'status' => 'ok',
+            'token' => '123abc:D'
+        ];
     }
 
 }
