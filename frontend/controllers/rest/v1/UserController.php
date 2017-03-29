@@ -10,6 +10,7 @@ namespace frontend\controllers\rest\v1;
 
 
 use common\models\rest\User;
+use common\models\rest\UserLogin;
 use common\models\rest\UserSignup;
 use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
@@ -54,6 +55,12 @@ class UserController extends Controller
         $model = new UserSignup();
         if ($model->load(\Yii::$app->request->bodyParams) && $model->signUp())
             return $model->authKeys();
+    }
+
+    public function actionLogin()
+    {
+        $model = new UserLogin();
+        return $model->login();
     }
 
 }
