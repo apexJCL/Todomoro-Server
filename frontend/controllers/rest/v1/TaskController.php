@@ -9,13 +9,10 @@
 namespace frontend\controllers\rest\v1;
 
 
-use common\helpers\JWTHelper;
-use common\models\Task;
-use yii\base\Exception;
+use frontend\models\Task;
 use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
-use yii\web\HttpException;
 use yii\web\Response;
 
 /**

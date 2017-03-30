@@ -2,8 +2,6 @@
 
 namespace common\models;
 
-use common\helpers\JWTHelper;
-use common\models\rest\responses\error\ErrorResponse;
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
 use yii\db\Expression;
@@ -18,10 +16,11 @@ use yii\db\Expression;
  * @property string $due_date
  * @property integer $pomodoro_cycles
  * @property string $created_at
+ * @property boolean $done
  *
  * @property User $user
  */
-class Task extends \yii\db\ActiveRecord
+class Task extends ActiveRecord
 {
     /**
      * @inheritdoc
@@ -29,16 +28,6 @@ class Task extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return 'task';
-    }
-
-    public static function all($token)
-    {
-        $payload = JWTHelper::verify($token);
-        if (!isset($payload)) {
-            \Yii::$app->response->statusCode = 401;
-            return new ErrorResponse("tokenError", "Token has expired");
-        }
-        return self::findAll(['user_id' => $payload->data->user_id]);
     }
 
     public function behaviors()
@@ -58,13 +47,14 @@ class Task extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules()
+    public
+    function rules()
     {
         return [
-            [['user_id', 'title', 'due_date'], 'required'],
-            [['user_id'], 'integer'],
-            [['pomodoro_cycles'], 'integer', 'min' => 0],
-            [['due_date'], 'safe'],
+            [['user_id', 'title', 'due_date', 'created_at'], 'required'],
+            [['user_id', 'pomodoro_cycles'], 'integer'],
+            [['due_date', 'created_at'], 'safe'],
+            [['done'], 'boolean'],
             [['title'], 'string', 'max' => 200],
             [['description'], 'string', 'max' => 500],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
@@ -74,7 +64,8 @@ class Task extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function attributeLabels()
+    public
+    function attributeLabels()
     {
         return [
             'id' => 'ID',
@@ -84,13 +75,15 @@ class Task extends \yii\db\ActiveRecord
             'due_date' => 'Due Date',
             'pomodoro_cycles' => 'Pomodoro Cycles',
             'created_at' => 'Created At',
+            'done' => 'Done',
         ];
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUser()
+    public
+    function getUser()
     {
         return $this->hasOne(User::className(), ['id' => 'user_id']);
     }
