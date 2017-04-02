@@ -18,8 +18,8 @@ class m170329_023045_create_task_table extends Migration
             'title' => $this->string(200)->notNull(),
             'description' => $this->string(500),
             'pomodoro_cycles' => $this->integer()->check('pomodoro_cycles >= 0'),
-            'due_date' => $this->,
-            'created_at' => 'timestamptz'
+            'due_date' => $this->bigInteger(),
+            'created_at' => $this->bigInteger()->notNull()
         ]);
         $this->addForeignKey('task_user_fk', 'task', 'user_id', 'user', 'id');
     }
