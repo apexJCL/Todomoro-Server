@@ -8,8 +8,7 @@
 
 namespace frontend\controllers\rest\v1;
 
-
-use frontend\models\Task;
+use common\models\rest\Task;
 use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -24,6 +23,9 @@ use yii\web\Response;
  */
 class TaskController extends Controller
 {
+
+    public $enableCsrfValidation = false;
+
 
     public function behaviors()
     {
@@ -47,6 +49,11 @@ class TaskController extends Controller
     public function actionIndex($token)
     {
         return Task::all($token);
+    }
+
+    public function actionCreate($token)
+    {
+        return Task::create($token);
     }
 
 

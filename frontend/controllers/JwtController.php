@@ -14,11 +14,11 @@ class JwtController extends \yii\web\Controller
     public function actionGenerate()
     {
         return $this->render('generate', [
-            'jwt' => JWTHelper::encode(
+            'jwt' => JWTHelper::generateToken(
                 [
-                    'username' => 'Carmona',
-                    'value' => '123'
-                ]
+                    'user_id' => \Yii::$app->user->id
+                ],
+                time()
             )
         ]);
     }

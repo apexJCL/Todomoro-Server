@@ -30,6 +30,19 @@ class Task extends ActiveRecord
         return 'task';
     }
 
+    public static function createFor($user_id, $t)
+    {
+        $task = new self();
+        $task->user_id = $user_id;
+        $task->title = $t->title;
+        $task->description = $t->description;
+        $task->due_date = $t->due_date;
+        $task->pomodoro_cycles = $t->pomodoro_cycles;
+        $task->done = $t->done;
+        $task->save();
+        return self::findOne(['id' => $task->primaryKey]);
+    }
+
     public function behaviors()
     {
         return [
@@ -51,7 +64,7 @@ class Task extends ActiveRecord
     function rules()
     {
         return [
-            [['user_id', 'title', 'due_date', 'created_at'], 'required'],
+            [['user_id', 'title', 'due_date'], 'required'],
             [['user_id', 'pomodoro_cycles'], 'integer'],
             [['due_date', 'created_at'], 'safe'],
             [['done'], 'boolean'],
