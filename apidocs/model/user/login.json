@@ -1,6 +1,5 @@
 {
-  "user": {
-    "username": "apexJCL",
-    "password": "root1337"
-  }
+  "username": "apexJCL",
+  "password": "root1337",
+  "fb_token": "firebaseToken"
 }

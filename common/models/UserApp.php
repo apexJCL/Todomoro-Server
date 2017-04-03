@@ -9,7 +9,7 @@ use Yii;
  *
  * @property integer $id
  * @property integer $user_id
- * @property string $firebase_toke
+ * @property string $firebase_token
  * @property integer $last_synced
  *
  * @property User $user
@@ -32,7 +32,7 @@ class UserApp extends \yii\db\ActiveRecord
         return [
             [['user_id'], 'required'],
             [['user_id', 'last_synced'], 'integer'],
-            [['firebase_toke'], 'string', 'max' => 1024],
+            [['firebase_token'], 'string', 'max' => 1024],
             [['user_id'], 'exist', 'skipOnError' => true, 'targetClass' => User::className(), 'targetAttribute' => ['user_id' => 'id']],
         ];
     }
@@ -45,7 +45,7 @@ class UserApp extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'user_id' => 'User ID',
-            'firebase_toke' => 'Firebase Toke',
+            'firebase_token' => 'Firebase Token',
             'last_synced' => 'Last Synced',
         ];
     }

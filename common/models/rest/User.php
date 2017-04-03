@@ -11,6 +11,7 @@ namespace common\models\rest;
 
 use common\models\rest\responses\error\ErrorResponse;
 use common\models\rest\responses\user\Credentials;
+use common\models\UserApp;
 use yii\base\Model;
 
 /**
@@ -29,11 +30,26 @@ class User extends Model
     public $last_name;
     public $password;
     public $email;
+    public $fbtoken;
 
     /**
      * @var $user \common\models\User | null
      */
     private $user;
+
+    /**
+     * @internal param \common\models\User $user
+     */
+    private function loginUpdate()
+    {
+        $user_app = UserApp::findOne(['user_id' => $this->user->id]);
+        if (!isset($user_app)) {
+            $user_app = new UserApp();
+            $user_app->user_id = $this->user->id;
+        }
+        $user_app->firebase_token = $this->fbtoken;
+        $user_app->save();
+    }
 
     public function rules()
     {
@@ -60,8 +76,10 @@ class User extends Model
             return new ErrorResponse();
         // Login
         $this->user = \common\models\User::findOne(['username' => $this->username]);
-        if ($this->validatePassword())
+        if ($this->validatePassword()) {
+            $this->loginUpdate();
             return new Credentials($this->user);
+        }
         return new ErrorResponse('error', 'Username or Password incorrect');
     }
 
@@ -93,6 +111,7 @@ class User extends Model
             return false;
         $this->username = $bodyParams['username'];
         $this->password = $bodyParams['password'];
+        $this->fbtoken = isset($bodyParams['fbtoken']) ? $bodyParams['fbtoken'] : null;
         return true;
     }
 
