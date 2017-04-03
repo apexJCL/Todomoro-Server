@@ -4,7 +4,6 @@ namespace common\models;
 
 use yii\behaviors\TimestampBehavior;
 use yii\db\ActiveRecord;
-use yii\db\Expression;
 
 /**
  * This is the model class for table "task".
@@ -13,9 +12,10 @@ use yii\db\Expression;
  * @property integer $user_id
  * @property string $title
  * @property string $description
- * @property string $due_date
  * @property integer $pomodoro_cycles
- * @property string $created_at
+ * @property integer $due_date
+ * @property integer $created_at
+ * @property integer $updated_at
  * @property boolean $done
  *
  * @property User $user
@@ -49,9 +49,9 @@ class Task extends ActiveRecord
             'timestamp' => [
                 'class' => TimestampBehavior::className(),
                 'attributes' => [
-                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at']
-                ],
-                'value' => new Expression('CURRENT_TIMESTAMP')
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['created_at', 'updated_at'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['updated_at']
+                ]
             ]
         ];
     }
@@ -65,7 +65,7 @@ class Task extends ActiveRecord
     {
         return [
             [['user_id', 'title', 'due_date'], 'required'],
-            [['user_id', 'pomodoro_cycles'], 'integer'],
+            [['user_id', 'pomodoro_cycles', 'created_at', 'updated_at'], 'integer'],
             [['due_date', 'created_at'], 'safe'],
             [['done'], 'boolean'],
             [['title'], 'string', 'max' => 200],

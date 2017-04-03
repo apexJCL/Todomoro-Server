@@ -45,16 +45,37 @@ class TaskController extends Controller
         ];
     }
 
-
+    /**
+     * Returns all the tasks
+     *
+     * @param $token
+     * @return \common\models\rest\responses\error\ErrorResponse|static[]
+     */
     public function actionIndex($token)
     {
         return Task::all($token);
     }
 
+    /**
+     * Creates a new task object and returns the same object, with updated
+     * id for referencing on future updates
+     * @param $token
+     * @return Task
+     */
     public function actionCreate($token)
     {
         return Task::create($token);
     }
 
+    /**
+     * Returns how many register does exist for the current user
+     *
+     * @param $token
+     * @return \common\models\rest\responses\error\ErrorResponse|int|string
+     */
+    public function actionCount($token)
+    {
+        return Task::count($token);
+    }
 
 }

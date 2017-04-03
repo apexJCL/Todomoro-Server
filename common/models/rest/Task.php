@@ -54,6 +54,16 @@ class Task extends Model
         return true;
     }
 
+    public static function count($token)
+    {
+        $payload = JWTHelper::verify($token);
+        if (!isset($payload)) {
+            \Yii::$app->response->statusCode = 401;
+            return new ErrorResponse("tokenError", "Token has expired");
+        }
+        return TaskModel::find()->where(['user_id' => $payload->data->user_id])->count();
+    }
+
     public function rules()
     {
         return [
