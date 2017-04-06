@@ -2,7 +2,8 @@
 
 namespace common\models;
 
-use Yii;
+use yii\behaviors\TimestampBehavior;
+use yii\db\ActiveRecord;
 
 /**
  * This is the model class for table "user_app".
@@ -16,6 +17,20 @@ use Yii;
  */
 class UserApp extends \yii\db\ActiveRecord
 {
+
+    public function behaviors()
+    {
+        return [
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+                'attributes' => [
+                    ActiveRecord::EVENT_BEFORE_INSERT => ['last_synced'],
+                    ActiveRecord::EVENT_BEFORE_UPDATE => ['last_synced']
+                ]
+            ]
+        ];
+    }
+
     /**
      * @inheritdoc
      */

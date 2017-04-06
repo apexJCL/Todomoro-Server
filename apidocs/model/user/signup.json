@@ -1,9 +1,8 @@
 {
-  "user": {
-    "username": "apexJCL",
-    "first_name": "José Carlos",
-    "last_name": "López Gaona",
-    "email": "jcl.isc@gmail.com",
-    "password": "apex1337@localhost"
-  }
+  "username": "root12",
+  "first_name": "José Carlos",
+  "last_name": "López Gaona",
+  "email": "a@b.com",
+  "password": "root1337",
+  "fbtoken": "987dfy9qbewfhb23hjhkb23r"
 }

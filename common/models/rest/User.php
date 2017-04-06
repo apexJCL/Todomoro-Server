@@ -54,16 +54,8 @@ class User extends Model
     public function rules()
     {
         return [
-            [['username', 'first_name', 'last_name', 'password', 'email'], 'required'],
-            [['username', 'first_name', 'last_name', 'password', 'email'], 'string'],
-        ];
-    }
-
-    public function authKeys()
-    {
-        return [
-            'status' => 'ok',
-            'token' => '123abc:D'
+            [['username', 'first_name', 'last_name', 'password', 'email', 'fbtoken'], 'required'],
+            [['username', 'first_name', 'last_name', 'password', 'email', 'fbtoken'], 'string'],
         ];
     }
 
@@ -113,6 +105,34 @@ class User extends Model
         $this->password = $bodyParams['password'];
         $this->fbtoken = isset($bodyParams['fbtoken']) ? $bodyParams['fbtoken'] : null;
         return true;
+    }
+
+    public function loadFromPost($params)
+    {
+        $attribs = get_class_vars(User::className());
+        foreach ($attribs as $nombre => $valor) {
+            $this->$nombre = isset($params[$nombre]) ? $params[$nombre] : null;
+        }
+        return $this->validate();
+    }
+
+    public function signUp()
+    {
+        $user = new \common\models\User();
+        $user->first_name = $this->first_name;
+        $user->last_name = $this->last_name;
+        $user->username = $this->username;
+        $user->email = $this->email;
+        $user->setPassword($this->password);
+        $user->generateAuthKey();
+        if ($user->validate() && $user->save()) {
+            $userdata = new UserApp();
+            $userdata->user_id = $user->primaryKey;
+            $userdata->firebase_token = $this->fbtoken;
+            $userdata->save();
+            return new Credentials($user);
+        }
+        return new ErrorResponse('error', var_dump($user->errors));
     }
 
 }

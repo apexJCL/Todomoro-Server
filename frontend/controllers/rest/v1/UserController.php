@@ -9,9 +9,9 @@
 namespace frontend\controllers\rest\v1;
 
 
+use common\models\rest\responses\error\ErrorResponse;
 use common\models\rest\User;
 use common\models\rest\UserLogin;
-use common\models\rest\UserSignup;
 use yii\filters\ContentNegotiator;
 use yii\filters\VerbFilter;
 use yii\web\Controller;
@@ -29,7 +29,8 @@ class UserController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'signup' => ['POST']
+                    'signup' => ['POST'],
+                    'login' => ['POST']
                 ]
             ],
             'contentNegotiator' => [
@@ -52,9 +53,11 @@ class UserController extends Controller
 
     public function actionSignup()
     {
-        $model = new UserSignup();
-        if ($model->load(\Yii::$app->request->bodyParams) && $model->signUp())
-            return $model->authKeys();
+        $model = new User();
+        if ($model->loadFromPost(\Yii::$app->request->bodyParams)){
+            return $model->signUp();
+        }
+        return new ErrorResponse('eror loading model', var_dump($model->errors));
     }
 
     public function actionLogin()
